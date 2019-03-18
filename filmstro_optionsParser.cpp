@@ -174,7 +174,7 @@ juce::String OptionsParser::getOptString (juce::StringRef optId) const
 juce::File OptionsParser::getOptFile (juce::StringRef optId) const
 {
     if (const Option* o = getOption (optId))
-        return File (o->value);
+        return File (o->value.toString().unquoted());
     return File();
 }
 
@@ -264,8 +264,8 @@ bool OptionsParser::Option::isOptionSet () const
 
 void OptionsParser::Option::setValue (juce::var v)
 {
-    if (type == OptFile && !File::isAbsolutePath (v.toString())) {
-        value = File::getCurrentWorkingDirectory().getChildFile (v.toString()).getFullPathName();
+    if (type == OptFile && !File::isAbsolutePath (v.toString().unquoted())) {
+        value = File::getCurrentWorkingDirectory().getChildFile (v.toString().unquoted()).getFullPathName();
     }
     else {
         value = v;
